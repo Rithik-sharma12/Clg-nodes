@@ -1,0 +1,2349 @@
+1. Create the following tables with given attributes having appropriate data type and specify
+the necessary primary and foreign key constraints: Customer (Custid, Custname, Age, phone)
+Loan (Loanid, Amount, Custid, EMI) a) List the name of the customers who have taken loan
+for more than Rs.50,000. b) List the Customer id of those who have no loan. c) List the total
+count of loan availed. d) Create a Trigger for customer table it will update another table
+amount while inserting values.
+:
+
+1. Create Tables with Constraints
+SQL statements to create Customer and Loan tables:
+sql
+Copy code
+-- Create Customer table
+CREATE TABLE Customer (
+Custid INT PRIMARY KEY,
+Custname VARCHAR(100),
+Age INT,
+phone VARCHAR(15)
+);
+-- Create Loan table with a foreign key reference to Customer table
+CREATE TABLE Loan (
+Loanid INT PRIMARY KEY,
+Amount DECIMAL(10, 2),
+Custid INT,
+EMI DECIMAL(10, 2),
+FOREIGN KEY (Custid) REFERENCES Customer(Custid)
+);
+
+2. Queries for Each Subpart
+(a) List the names of the customers who have taken a loan for more than Rs. 50,000.
+sql
+Copy code
+SELECT Custname
+FROM Customer
+WHERE Custid IN (
+SELECT Custid
+FROM Loan
+WHERE Amount > 50000
+);
+
+(b) List the Customer IDs of those who have no loan.
+sql
+Copy code
+SELECT Custid
+FROM Customer
+WHERE Custid NOT IN (
+SELECT Custid
+FROM Loan
+);
+
+(c) List the total count of loans availed.
+sql
+Copy code
+SELECT COUNT(*) AS TotalLoans
+FROM Loan;
+
+3. Create a Trigger to Update the Amount Table
+Assuming there is an Amount table with a structure like this:
+sql
+Copy code
+-- Create Amount table to be updated by the trigger
+CREATE TABLE Amount (
+Custid INT PRIMARY KEY,
+TotalAmount DECIMAL(10, 2)
+);
+
+The trigger will update the Amount table whenever a new record is inserted into the Customer
+table.
+Trigger creation:
+sql
+Copy code
+-- Create Trigger on the Customer table to update Amount table
+CREATE TRIGGER UpdateAmountAfterInsert
+AFTER INSERT ON Customer
+FOR EACH ROW
+BEGIN
+-- Assume initial amount is 0 when a new customer is added
+INSERT INTO Amount (Custid, TotalAmount) VALUES (NEW.Custid, 0);
+END;
+
+1. Create Tables with Constraints SQL statements to create Customer and Loan tables: sql
+Copy code -- Create Customer table CREATE TABLE Customer ( Custid INT PRIMARY
+KEY, Custname VARCHAR(100), Age INT, phone VARCHAR(15) ); -- Create Loan table
+with a foreign key reference to Customer table CREATE TABLE Loan ( Loanid INT
+PRIMARY KEY, Amount DECIMAL(10, 2), Custid INT, EMI DECIMAL(10, 2),
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) ); 2. Queries for Each Subpart
+(a) List the names of the customers who have taken a loan for more than Rs. 50,000. sql Copy
+code SELECT Custname FROM Customer WHERE Custid IN ( SELECT Custid FROM
+Loan WHERE Amount > 50000 ); (b) List the Customer IDs of those who have no loan. sql
+Copy code SELECT Custid FROM Customer WHERE Custid NOT IN ( SELECT Custid
+FROM Loan ); (c) List the total count of loans availed. sql Copy code SELECT COUNT(*)
+AS TotalLoans FROM Loan; 3. Create a Trigger to Update the Amount Table Assuming
+there is an Amount table with a structure like this: sql Copy code -- Create Amount table to
+be updated by the trigger CREATE TABLE Amount ( Custid INT PRIMARY KEY,
+TotalAmount DECIMAL(10, 2) ); The trigger will update the Amount table whenever a new
+record is inserted into the Customer table. Trigger creation: sql Copy code -- Create Trigger
+on the Customer table to update Amount table CREATE TRIGGER
+UpdateAmountAfterInsert AFTER INSERT ON Customer FOR EACH ROW BEGIN --
+
+Assume initial amount is 0 when a new customer is added INSERT INTO Amount (Custid,
+TotalAmount) VALUES (NEW.Custid, 0); END;
+
+1. SQL Statements to Create Customer and Loan Tables
+sql
+Copy code
+-- Create Customer table
+CREATE TABLE Customer (
+Custid INT PRIMARY KEY,
+Custname VARCHAR(100) NOT NULL,
+Age INT,
+phone VARCHAR(15)
+);
+-- Create Loan table with a foreign key reference to the Customer table
+CREATE TABLE Loan (
+Loanid INT PRIMARY KEY,
+Amount DECIMAL(10, 2),
+Custid INT,
+EMI DECIMAL(10, 2),
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) ON DELETE CASCADE
+);
+
+
+
+
+Customer table:
+o Custid: Primary Key.
+o Custname: Stores customer name.
+o Age: Stores customer age.
+o phone: Stores phone number.
+Loan table:
+o Loanid: Primary Key.
+o Amount: Stores the loan amount.
+o Custid: References Custid in Customer table (Foreign Key).
+o EMI: Stores the EMI of the loan.
+
+2. Queries for Each Subpart
+(a) List the names of the customers who have taken a loan for more than Rs. 50,000:
+sql
+Copy code
+SELECT Custname
+FROM Customer
+WHERE Custid IN (
+SELECT Custid
+FROM Loan
+WHERE Amount > 50000
+);
+
+This query finds customers whose Custid matches those in the Loan table with an amount
+greater than Rs. 50,000.
+(b) List the Customer IDs of those who have no loan:
+
+sql
+Copy code
+SELECT Custid
+FROM Customer
+WHERE Custid NOT IN (
+SELECT Custid
+FROM Loan
+);
+
+This query selects all Custids from the Customer table that are not present in the Loan table,
+indicating no loan records.
+(c) List the total count of loans availed:
+sql
+Copy code
+SELECT COUNT(*) AS TotalLoans
+FROM Loan;
+
+This query counts the total number of rows in the Loan table, representing the number of
+loans taken.
+
+3. Create a Trigger to Update the Amount Table
+Assuming there is an Amount table to keep track of the total loan amount for each customer:
+sql
+Copy code
+-- Create Amount table to be updated by the trigger
+CREATE TABLE Amount (
+Custid INT PRIMARY KEY,
+TotalAmount DECIMAL(10, 2)
+);
+
+Trigger to update Amount table when a new customer is inserted:
+sql
+Copy code
+-- Create Trigger on the Customer table to update Amount table
+CREATE TRIGGER UpdateAmountAfterInsert
+AFTER INSERT ON Customer
+FOR EACH ROW
+BEGIN
+-- Insert an initial amount of 0 when a new customer is added
+INSERT INTO Amount (Custid, TotalAmount) VALUES (NEW.Custid, 0);
+END;
+
+This trigger will automatically add an entry in the Amount table for each new customer added
+to the Customer table with an initial TotalAmount of 0.
+
+Summary
+
+
+
+The SQL scripts create the necessary tables and relationships.
+Queries help retrieve data related to customers and their loans.
+
+
+
+The trigger automatically maintains data consistency between Customer and Amount
+tables when a new customer is inserted.
+
+4o
+You said:
+
+3. Create the following tables with given attributes having appropriate data type and specify
+the necessary primary and foreign key constraints: Voter (VoterId, Votername, Gender,
+Boothid,Checkvote) checkvote is 1(voted) or 0 (not voted) Booth (Boothid,
+Location,BIncharge ) a) (i)List the count of voters in each Booth (ii) List the count of Male
+voters voted. b) Display the overall count of voters voted in the election. c) Display the
+Boothid, Location and count of voters voted. d) Write a function to return the percentage of
+poll in a booth when boothid is given as input. Handle Exceptions.
+ChatGPT said:
+
+ChatGPT
+Let's break down the solution into parts, creating the tables, writing queries for the subparts,
+and then defining the function to calculate the percentage of polls in a booth.
+
+1. Create Tables with Constraints
+SQL statements to create Voter and Booth tables:
+sql
+Copy code
+-- Create Booth table
+CREATE TABLE Booth (
+Boothid INT PRIMARY KEY,
+Location VARCHAR(100) NOT NULL,
+BIncharge VARCHAR(100) NOT NULL
+);
+-- Create Voter table with a foreign key reference to the Booth table
+CREATE TABLE Voter (
+VoterId INT PRIMARY KEY,
+Votername VARCHAR(100) NOT NULL,
+Gender VARCHAR(10),
+Boothid INT,
+Checkvote INT CHECK (Checkvote IN (0, 1)),
+FOREIGN KEY (Boothid) REFERENCES Booth(Boothid) ON DELETE CASCADE
+);
+
+
+
+
+Booth table:
+o Boothid: Primary Key.
+o Location: Location of the booth.
+o BIncharge: Booth in-charge's name.
+Voter table:
+o VoterId: Primary Key.
+o Votername: Stores voter name.
+o Gender: Stores gender of the voter.
+
+o
+o
+
+Boothid: References Boothid in the Booth table (Foreign Key).
+Checkvote: Stores 1 if the voter has voted, 0 otherwise.
+
+2. Queries for Each Subpart
+(a) (i) List the count of voters in each Booth:
+sql
+Copy code
+SELECT Boothid, COUNT(*) AS VoterCount
+FROM Voter
+GROUP BY Boothid;
+
+This query counts the number of voters associated with each Boothid by grouping the voters.
+(a) (ii) List the count of Male voters who have voted:
+sql
+Copy code
+SELECT COUNT(*) AS MaleVotersVoted
+FROM Voter
+WHERE Gender = 'Male' AND Checkvote = 1;
+
+This query counts male voters who have voted (i.e., where Checkvote is 1).
+(b) Display the overall count of voters who have voted in the election:
+sql
+Copy code
+SELECT COUNT(*) AS TotalVotersVoted
+FROM Voter
+WHERE Checkvote = 1;
+
+This query counts all voters who have voted (where Checkvote is 1).
+(c) Display the Boothid, Location, and count of voters who have voted:
+sql
+Copy code
+SELECT B.Boothid, B.Location, COUNT(V.VoterId) AS VotersVoted
+FROM Booth B
+LEFT JOIN Voter V ON B.Boothid = V.Boothid
+WHERE V.Checkvote = 1
+GROUP BY B.Boothid, B.Location;
+
+This query joins the Booth and Voter tables to get the count of voters who have voted for
+each booth, including booth location.
+
+3. Write a Function to Return the Percentage of Poll in a Booth
+Here’s a function to calculate the percentage of voters who have voted in a specified booth.
+This function takes a Boothid as input and handles exceptions.
+
+sql
+Copy code
+DELIMITER //
+CREATE FUNCTION GetPollPercentage(booth_id INT)
+RETURNS DECIMAL(5, 2)
+BEGIN
+DECLARE total_voters INT;
+DECLARE voted_voters INT;
+DECLARE poll_percentage DECIMAL(5, 2);
+-- Handle the scenario where booth ID might not exist
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+RETURN -1;
+-- Get the total number of voters in the specified booth
+SELECT COUNT(*) INTO total_voters
+FROM Voter
+WHERE Boothid = booth_id;
+-- Get the count of voters who have voted in the specified booth
+SELECT COUNT(*) INTO voted_voters
+FROM Voter
+WHERE Boothid = booth_id AND Checkvote = 1;
+-- If total voters are 0, return 0 to avoid division by zero
+IF total_voters = 0 THEN
+RETURN 0;
+ELSE
+-- Calculate the poll percentage
+SET poll_percentage = (voted_voters / total_voters) * 100;
+RETURN poll_percentage;
+END IF;
+END //
+DELIMITER ;
+
+Explanation:
+
+
+
+
+
+
+
+The function GetPollPercentage calculates the percentage of voters who have voted
+in a specified booth.
+It takes booth_id as an input parameter.
+It declares total_voters and voted_voters to store counts and poll_percentage
+for the result.
+It handles exceptions where the booth ID might not exist, returning -1 in such cases.
+It calculates the percentage as (voted_voters / total_voters) * 100.
+If total_voters is 0, it returns 0 to avoid division by zero errors.
+
+Summary
+
+
+
+
+4o
+
+This solution includes table creation with primary and foreign key constraints, queries
+to extract information about voters and booths, and a function to calculate voting
+percentages.
+The function is designed to handle invalid inputs and division by zero gracefully.
+
+You said:
+
+4. Create the following tables with given attributes having appropriate data type and specify
+the necessary primary and foreign key constraints: User (Userid, Name, Dept, Bookid,
+Accdate) Book (Bookid, Book_name, Author, Publication, Price) a) List the name of the user
+who had accessed the costliest book. b) List the userid and count of books accessed by the
+user. c) List the books published by Wiley publisher. d) Write a PL/SQL program to print the
+details of the book when Bookid is given as input. Handle appropriate exceptions.
+ChatGPT said:
+
+ChatGPT
+Let's break down the solution into the following parts: creating tables, writing the required
+queries, and defining a PL/SQL program to display book details when a Bookid is provided
+as input.
+
+1. Create Tables with Constraints
+SQL statements to create User and Book tables:
+sql
+Copy code
+-- Create Book table
+CREATE TABLE Book (
+Bookid INT PRIMARY KEY,
+Book_name VARCHAR(100) NOT NULL,
+Author VARCHAR(100),
+Publication VARCHAR(100),
+Price DECIMAL(10, 2)
+);
+-- Create User table with a foreign key reference to the Book table
+CREATE TABLE User (
+Userid INT PRIMARY KEY,
+Name VARCHAR(100) NOT NULL,
+Dept VARCHAR(100),
+Bookid INT,
+Accdate DATE,
+FOREIGN KEY (Bookid) REFERENCES Book(Bookid)
+);
+
+
+
+
+Book table:
+o Bookid: Primary Key.
+o Book_name: Name of the book.
+o Author: Name of the author.
+o Publication: Publisher's name.
+o Price: Price of the book.
+User table:
+o Userid: Primary Key.
+o Name: Name of the user.
+o Dept: Department of the user.
+o Bookid: References Bookid in the Book table (Foreign Key).
+o Accdate: Date when the user accessed the book.
+
+2. Queries for Each Subpart
+(a) List the name of the user who accessed the costliest book:
+sql
+Copy code
+SELECT U.Name
+FROM User U
+JOIN Book B ON U.Bookid = B.Bookid
+WHERE B.Price = (SELECT MAX(Price) FROM Book);
+
+This query finds the user who accessed the book with the highest price by joining the User
+and Book tables and using a subquery to find the maximum price.
+(b) List the Userid and count of books accessed by the user:
+sql
+Copy code
+SELECT Userid, COUNT(Bookid) AS BookCount
+FROM User
+GROUP BY Userid;
+
+This query counts the number of books accessed by each user, grouping results by Userid.
+(c) List the books published by "Wiley" publisher:
+sql
+Copy code
+SELECT Bookid, Book_name, Author, Price
+FROM Book
+WHERE Publication = 'Wiley';
+
+This query selects details of books published by "Wiley".
+
+3. Write a PL/SQL Program to Print Book Details
+Here's a PL/SQL program to retrieve and display details of a book when a Bookid is given as
+input:
+sql
+Copy code
+DECLARE
+v_Book_name VARCHAR(100);
+v_Author VARCHAR(100);
+v_Publication VARCHAR(100);
+v_Price DECIMAL(10, 2);
+v_Bookid INT := &Bookid; -- Take input for Bookid
+BEGIN
+-- Retrieve book details based on Bookid
+SELECT Book_name, Author, Publication, Price INTO v_Book_name,
+v_Author, v_Publication, v_Price
+FROM Book
+WHERE Bookid = v_Bookid;
+-- Output the book details
+
+DBMS_OUTPUT.PUT_LINE('Book Name: ' || v_Book_name);
+DBMS_OUTPUT.PUT_LINE('Author: ' || v_Author);
+DBMS_OUTPUT.PUT_LINE('Publication: ' || v_Publication);
+DBMS_OUTPUT.PUT_LINE('Price: ' || v_Price);
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE('No book found with the given Bookid: ' ||
+v_Bookid);
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+Explanation:
+
+
+
+
+
+
+Variable Declarations: Declares variables to store book details like v_Book_name,
+v_Author, v_Publication, v_Price, and v_Bookid (which will take the input
+value).
+SELECT Statement: Retrieves the details of the book matching the given Bookid
+and stores them in the declared variables.
+DBMS_OUTPUT.PUT_LINE: Prints the retrieved book details.
+Exception Handling:
+o NO_DATA_FOUND: Handles the case where the Bookid does not exist in the
+Book table.
+o OTHERS: Catches any other exceptions that might occur and displays the error
+message.
+
+Summary
+
+
+
+The User and Book tables are set up with primary and foreign key constraints.
+Queries provide information on users accessing books, publishers, and
+
+Let's work through the solution step by step, including creating the tables, writing the
+required SQL queries, creating a view, and defining a trigger for the minimum account
+balance.
+
+1. Create Tables with Constraints
+SQL statements to create Customer, Loan, and Account tables:
+sql
+Copy code
+-- Create Customer table
+CREATE TABLE Customer (
+Custid INT PRIMARY KEY,
+Custname VARCHAR(100) NOT NULL,
+Addr VARCHAR(200),
+phno VARCHAR(15),
+panno VARCHAR(10) UNIQUE
+);
+-- Create Loan table with a foreign key reference to Customer table
+CREATE TABLE Loan (
+Loanid INT PRIMARY KEY,
+
+Amount DECIMAL(10, 2),
+Interest DECIMAL(5, 2),
+Custid INT,
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) ON DELETE CASCADE
+);
+-- Create Account table with a foreign key reference to Customer table
+CREATE TABLE Account (
+Acctno INT PRIMARY KEY,
+Accbal DECIMAL(10, 2),
+Custid INT,
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) ON DELETE CASCADE
+);
+
+
+
+
+
+
+Customer table:
+o Custid: Primary Key.
+o Custname: Name of the customer.
+o Addr: Address of the customer.
+o phno: Phone number.
+o panno: PAN number (Unique).
+Loan table:
+o Loanid: Primary Key.
+o Amount: Loan amount.
+o Interest: Interest rate.
+o Custid: References Custid in Customer table (Foreign Key).
+Account table:
+o Acctno: Primary Key.
+o Accbal: Account balance.
+o Custid: References Custid in Customer table (Foreign Key).
+
+2. Queries for Each Subpart
+(a) Display the account balance of a particular customer "ARUN":
+sql
+Copy code
+SELECT A.Accbal
+FROM Account A
+JOIN Customer C ON A.Custid = C.Custid
+WHERE C.Custname = 'ARUN';
+
+This query joins the Account and Customer tables to display the account balance of a
+customer with the name "ARUN".
+(b) Update the interest with 1% when Accbal of the Custid is greater than 50% of the
+Loan Amount:
+sql
+Copy code
+UPDATE Loan L
+SET L.Interest = L.Interest + 1
+WHERE L.Custid IN (
+SELECT A.Custid
+FROM Account A
+
+WHERE A.Accbal > 0.5 * L.Amount
+
+);
+
+This query updates the interest rate, increasing it by 1% for customers whose account balance
+is greater than 50% of their loan amount.
+(c) Create a view with Accbal and loan amount of all customers:
+sql
+Copy code
+CREATE VIEW CustomerFinanceView AS
+SELECT C.Custid, C.Custname, A.Accbal, L.Amount AS LoanAmount
+FROM Customer C
+LEFT JOIN Account A ON C.Custid = A.Custid
+LEFT JOIN Loan L ON C.Custid = L.Custid;
+
+This view combines the customer ID, name, account balance, and loan amount into a single
+view for easy access.
+(d) Create a trigger which checks for a minimum balance in the account:
+Let's assume that the minimum balance requirement is 1000.
+sql
+Copy code
+DELIMITER //
+CREATE TRIGGER CheckMinimumBalance
+BEFORE UPDATE ON Account
+FOR EACH ROW
+BEGIN
+IF NEW.Accbal < 1000 THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Account balance cannot be less than the minimum
+required balance of 1000.';
+END IF;
+END //
+DELIMITER ;
+
+Explanation:
+
+
+
+
+
+Trigger Name: CheckMinimumBalance
+Trigger Type: BEFORE UPDATE
+Trigger Action: Checks if the new Accbal (balance) is less than 1000 before
+updating.
+Condition: If the new balance is less than 1000, an error is triggered using SIGNAL
+SQLSTATE to stop the update and display an appropriate message.
+
+Summary
+
+
+
+The SQL scripts create tables with primary and foreign key constraints.
+Queries (a) and (b) retrieve the account balance and update the interest rate based on
+conditions.
+
+
+
+
+The view created in (c) gives a comprehensive overview of account balances and loan
+amounts.
+The trigger in (d) ensures that account balances do not fall below a specified
+minimum.
+
+4o
+You said:
+
+6. Create the following tables with given attributes having appropriate data type and specify
+the necessary primary and foreign key constraints: Customer (Custid, Custname,
+phno,pan,DOB) HomeLoan (HLoanid, Amount, Custid) VehicleLoan (VLoanid, Amount,
+Custid) a) List the Custid of the customers who have both homeloan and vehicle loan. b) List
+the Custid of the customers who donot have any loan. c) Create a view with customerid,
+Customer name and total loan amount (HomeLoan and VehicleLoan) d) Write a trigger
+which displays the Homeloan details whenever the values are inserted in the respective table.
+ChatGPT said:
+
+ChatGPT
+Let's work through this task step by step, including creating tables with constraints, writing
+queries, creating a view, and defining a trigger.
+
+1. Create Tables with Constraints
+SQL statements to create Customer, HomeLoan, and VehicleLoan tables:
+sql
+Copy code
+-- Create Customer table
+CREATE TABLE Customer (
+Custid INT PRIMARY KEY,
+Custname VARCHAR(100) NOT NULL,
+phno VARCHAR(15),
+pan VARCHAR(10) UNIQUE,
+DOB DATE
+);
+-- Create HomeLoan table with a foreign key reference to Customer table
+CREATE TABLE HomeLoan (
+HLoanid INT PRIMARY KEY,
+Amount DECIMAL(10, 2),
+Custid INT,
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) ON DELETE CASCADE
+);
+-- Create VehicleLoan table with a foreign key reference to Customer table
+CREATE TABLE VehicleLoan (
+VLoanid INT PRIMARY KEY,
+Amount DECIMAL(10, 2),
+Custid INT,
+FOREIGN KEY (Custid) REFERENCES Customer(Custid) ON DELETE CASCADE
+);
+
+
+
+
+
+
+
+Customer table:
+o Custid: Primary Key.
+o Custname: Name of the customer.
+o phno: Phone number.
+o pan: PAN number (Unique).
+o DOB: Date of birth.
+HomeLoan table:
+o HLoanid: Primary Key.
+o Amount: Home loan amount.
+o Custid: References Custid in the Customer table (Foreign Key).
+VehicleLoan table:
+o VLoanid: Primary Key.
+o Amount: Vehicle loan amount.
+o Custid: References Custid in the Customer table (Foreign Key).
+
+2. Queries for Each Subpart
+(a) List the Custid of the customers who have both home loan and vehicle loan:
+sql
+Copy code
+SELECT Custid
+FROM HomeLoan
+INTERSECT
+SELECT Custid
+FROM VehicleLoan;
+
+This query finds customers whose Custid exists in both HomeLoan and VehicleLoan tables
+using the INTERSECT operation.
+(b) List the Custid of the customers who do not have any loan:
+sql
+Copy code
+SELECT Custid
+FROM Customer
+WHERE Custid NOT IN (SELECT Custid FROM HomeLoan)
+AND Custid NOT IN (SELECT Custid FROM VehicleLoan);
+
+This query selects customers from the Customer table whose Custid does not appear in
+either HomeLoan or VehicleLoan.
+
+3. Create a View
+(c) Create a view with Custid, Custname, and total loan amount (HomeLoan and
+VehicleLoan):
+sql
+Copy code
+CREATE VIEW CustomerTotalLoan AS
+SELECT C.Custid, C.Custname,
+COALESCE(H.Amount, 0) + COALESCE(V.Amount, 0) AS TotalLoanAmount
+
+FROM Customer C
+LEFT JOIN HomeLoan H ON C.Custid = H.Custid
+LEFT JOIN VehicleLoan V ON C.Custid = V.Custid;
+
+
+
+This view uses LEFT JOIN to ensure that all customers are included, even if they do
+not have a loan.
+COALESCE is used to treat NULL values as 0 when a customer does not have a particular
+loan type.
+
+4. Create a Trigger
+(d) Write a trigger to display the HomeLoan details whenever values are inserted into
+the respective table:
+sql
+Copy code
+DELIMITER //
+CREATE TRIGGER DisplayHomeLoanAfterInsert
+AFTER INSERT ON HomeLoan
+FOR EACH ROW
+BEGIN
+DECLARE v_Custname VARCHAR(100);
+-- Get the customer name from the Customer table
+SELECT Custname INTO v_Custname
+FROM Customer
+WHERE Custid = NEW.Custid;
+-- Display HomeLoan details
+SELECT NEW.HLoanid AS HomeLoanID, v_Custname AS CustomerName,
+NEW.Amount AS LoanAmount;
+END //
+DELIMITER ;
+
+Explanation:
+
+
+
+
+
+Trigger Name: DisplayHomeLoanAfterInsert
+Trigger Type: AFTER INSERT — It fires after a new record is inserted into the
+HomeLoan table.
+Trigger Action: Retrieves the Custname from the Customer table using the Custid
+of the newly inserted home loan.
+SELECT Statement: Uses SELECT ... INTO to get the Custname and then displays
+the new home loan details.
+
+Summary
+
+
+
+
+
+Tables Customer, HomeLoan, and VehicleLoan are created with primary and foreign
+key constraints.
+Queries for (a) and (b) find customers with both loans and those without any loans.
+The view in (c) combines customer information with total loan amounts.
+The trigger in (d) ensures that details of a newly inserted home loan are displayed.
+
+4o
+You said:
+
+7. Create the following tables with given attributes having appropriate data type and specify
+the necessary primary and foreign key constraints: Product (Prodid, Prodesc, Price, Stock)
+Sales (Salesid, Prodid, qty) a) Add a column reorder in Product table having value 50 for all
+products. b) Display the Product id for in descending order of quantity ordered. c) Write a
+function to display the Fibonacci series. d)Write a PL/SQL program to find given number is
+odd or even using control structures 8. Create the following tables with given attributes
+having appropriate data type and specify the necessary primary and foreign key constraints:
+Product (Prodid, Prodesc, Price, Stock) Sales (Salesid, Prodid, qty) a) Add a column reorder
+in Product table having value 50 for all products. b) Display the Sales Report. b) Display the
+Product id for in descending order of quantity ordered. c) Write a PL/SQL trigger to an insert
+a operation against a table .
+ChatGPT said:
+
+ChatGPT
+Let’s work through the requirements for both tasks step by step, covering the creation of
+tables, modifications, queries, and PL/SQL code.
+
+Task 7: Create Tables and Implement Functionality
+1. Create Tables with Constraints
+SQL statements to create Product and Sales tables:
+sql
+Copy code
+-- Create Product table
+CREATE TABLE Product (
+Prodid INT PRIMARY KEY,
+Prodesc VARCHAR(100) NOT NULL,
+Price DECIMAL(10, 2),
+Stock INT
+);
+-- Create Sales table with a foreign key reference to Product table
+CREATE TABLE Sales (
+Salesid INT PRIMARY KEY,
+Prodid INT,
+qty INT,
+FOREIGN KEY (Prodid) REFERENCES Product(Prodid) ON DELETE CASCADE
+);
+
+
+Product table:
+o Prodid: Primary Key.
+o Prodesc: Description of the product.
+o Price: Price of the product.
+
+
+
+o Stock: Available stock of the product.
+Sales table:
+o Salesid: Primary Key.
+o Prodid: References Prodid in the Product table (Foreign Key).
+o qty: Quantity sold.
+
+2. Add a Column to the Product Table
+(a) Add a column reorder in the Product table with value 50 for all products:
+sql
+Copy code
+ALTER TABLE Product
+ADD reorder INT DEFAULT 50;
+
+This statement adds a new column reorder to the Product table with a default value of 50.
+3. Display the Product ID in Descending Order of Quantity Ordered
+(b) Display the Product ID for sales in descending order of quantity ordered:
+sql
+Copy code
+SELECT P.Prodid, SUM(S.qty) AS TotalQtyOrdered
+FROM Product P
+JOIN Sales S ON P.Prodid = S.Prodid
+GROUP BY P.Prodid
+ORDER BY TotalQtyOrdered DESC;
+
+This query joins the Product and Sales tables, grouping by Prodid and summing the
+quantities sold to order them in descending order.
+4. Write a Function to Display the Fibonacci Series
+(c) Function to display the Fibonacci series:
+sql
+Copy code
+CREATE OR REPLACE FUNCTION Fibonacci(n INT) RETURN VARCHAR2 IS
+fib_series VARCHAR2(4000) := '0, 1'; -- Initialize with first two
+Fibonacci numbers
+a INT := 0;
+b INT := 1;
+c INT;
+BEGIN
+FOR i IN 2 .. n LOOP
+c := a + b;
+fib_series := fib_series || ', ' || c;
+a := b;
+b := c;
+END LOOP;
+RETURN fib_series;
+END;
+
+This function generates a Fibonacci series up to n numbers and returns it as a string.
+
+5. PL/SQL Program to Determine Odd or Even
+(d) PL/SQL program to find whether a number is odd or even:
+sql
+Copy code
+DECLARE
+v_Number INT := &InputNumber; -- Prompt for input
+BEGIN
+IF MOD(v_Number, 2) = 0 THEN
+DBMS_OUTPUT.PUT_LINE(v_Number || ' is Even.');
+ELSE
+DBMS_OUTPUT.PUT_LINE(v_Number || ' is Odd.');
+END IF;
+END;
+
+This program checks if the input number is odd or even using the MOD function and outputs
+the result.
+
+Task 8: Create Tables and Implement Functionality
+1. Create Tables with Constraints
+The tables have already been created in Task 7. The structure remains the same:
+sql
+Copy code
+-- Create Product table
+CREATE TABLE Product (
+Prodid INT PRIMARY KEY,
+Prodesc VARCHAR(100) NOT NULL,
+Price DECIMAL(10, 2),
+Stock INT
+);
+-- Create Sales table with a foreign key reference to Product table
+CREATE TABLE Sales (
+Salesid INT PRIMARY KEY,
+Prodid INT,
+qty INT,
+FOREIGN KEY (Prodid) REFERENCES Product(Prodid) ON DELETE CASCADE
+);
+
+2. Add a Column to the Product Table
+(a) Add a column reorder in the Product table with value 50:
+sql
+Copy code
+ALTER TABLE Product
+ADD reorder INT DEFAULT 50;
+
+3. Display the Sales Report
+
+(b) Display the Sales Report:
+sql
+Copy code
+SELECT S.Salesid, P.Prodid, P.Prodesc, S.qty, P.Price, (S.qty * P.Price) AS
+TotalSale
+FROM Sales S
+JOIN Product P ON S.Prodid = P.Prodid;
+
+This query displays a sales report with details about the sales, including the total sale amount
+calculated as qty * Price.
+4. Display the Product ID in Descending Order of Quantity Ordered
+(c) Display the Product ID for sales in descending order of quantity ordered:
+sql
+Copy code
+SELECT P.Prodid, SUM(S.qty) AS TotalQtyOrdered
+FROM Product P
+JOIN Sales S ON P.Prodid = S.Prodid
+GROUP BY P.Prodid
+ORDER BY TotalQtyOrdered DESC;
+
+This query is the same as in Task 7(b), listing product IDs ordered by quantity sold in
+descending order.
+5. Write a PL/SQL Trigger for Insert Operations
+(d) Write a PL/SQL trigger to perform an insert operation against a table:
+sql
+Copy code
+DELIMITER //
+CREATE TRIGGER BeforeInsertSales
+BEFORE INSERT ON Sales
+FOR EACH ROW
+BEGIN
+DECLARE v_Stock INT;
+-- Get the current stock of the product
+SELECT Stock INTO v_Stock
+FROM Product
+WHERE Prodid = NEW.Prodid;
+-- Check if there's enough stock for the sale
+IF v_Stock < NEW.qty THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Insufficient stock for Product ID: ' ||
+NEW.Prodid;
+END IF;
+END //
+DELIMITER ;
+
+Explanation:
+
+
+
+
+Trigger Name: BeforeInsertSales
+Trigger Type: BEFORE INSERT — Fires before a new record is inserted into the
+Sales table.
+Trigger Action: Checks if there is enough stock for the product being sold. If not, it
+raises an error using SIGNAL SQLSTATE.
+
+Summary
+
+
+
+
+
+Both tasks involve creating Product and Sales tables with necessary constraints.
+We add a reorder column to the Product table and write SQL queries to generate
+reports and order quantities.
+PL/SQL code is provided to generate Fibonacci series and check if a number is odd or
+even.
+A trigger is implemented to prevent sales when stock is insufficient.
+
+4o mini
+You said:
+
+9.Create a table member with the following fields member code, member name, phoneno.
+Create a table book with the following fields bookcode, category code, bookname, cost.
+Create a table issue with the following fields membercode, Book code, Issuedate, Returndate.
+A.List all the members names who have taken the book on 8-10-2007. B.List the member
+codes of the members who have taken books worth more than Rs. 400.00. C.Write a PL/SQL
+block using cursor to display the contents of various tables based on the options D. Write a
+PL/SQL trigger to perform delete operation against a table 10. Create the following tables
+with given attributes having appropriate data type and specify the necessary primary and
+foreign key constraints: Marks(Regno,Name , Dept, Subj1,Subj2,Subj3) a) Add a column
+Total in student table and update the Total field with the sum of 3 subject Marks. b) Find the
+second maximum total in the table. c) Display the name of the student with maximum total.
+d) Write a PL/SQL trigger to perform update operation against a table
+ChatGPT said:
+
+ChatGPT
+Let's break down the requirements for tasks 9 and 10 step by step, including table creation,
+queries, PL/SQL blocks, and triggers.
+
+Task 9: Create Tables and Implement Functionality
+1. Create Tables with Constraints
+SQL statements to create member, book, and issue tables:
+sql
+
+Copy code
+-- Create member table
+CREATE TABLE member (
+member_code INT PRIMARY KEY,
+member_name VARCHAR(100) NOT NULL,
+phoneno VARCHAR(15)
+);
+-- Create book table
+CREATE TABLE book (
+book_code INT PRIMARY KEY,
+category_code INT,
+book_name VARCHAR(100) NOT NULL,
+cost DECIMAL(10, 2)
+);
+-- Create issue table
+CREATE TABLE issue (
+member_code INT,
+book_code INT,
+issue_date DATE,
+return_date DATE,
+FOREIGN KEY (member_code) REFERENCES member(member_code) ON DELETE
+CASCADE,
+FOREIGN KEY (book_code) REFERENCES book(book_code) ON DELETE CASCADE
+);
+
+
+
+
+
+
+member table:
+o member_code: Primary Key.
+o member_name: Name of the member.
+o phoneno: Phone number of the member.
+book table:
+o book_code: Primary Key.
+o category_code: Category code for the book.
+o book_name: Name of the book.
+o cost: Cost of the book.
+issue table:
+o member_code: References member_code in the member table (Foreign Key).
+o book_code: References book_code in the book table (Foreign Key).
+o issue_date: Date the book was issued.
+o return_date: Date the book was returned.
+
+2. Queries for Each Subpart
+(A) List all the members' names who have taken the book on 8-10-2007:
+sql
+Copy code
+SELECT m.member_name
+FROM member m
+JOIN issue i ON m.member_code = i.member_code
+WHERE i.issue_date = TO_DATE('2007-10-08', 'YYYY-MM-DD');
+
+This query joins the member and issue tables and filters for records with the specified issue
+date.
+
+(B) List the member codes of the members who have taken books worth more than Rs.
+400.00:
+sql
+Copy code
+SELECT DISTINCT i.member_code
+FROM issue i
+JOIN book b ON i.book_code = b.book_code
+WHERE b.cost > 400;
+
+This query retrieves distinct member codes from the issue table for books costing more than
+Rs. 400.
+3. PL/SQL Block Using Cursor
+(C) PL/SQL block using a cursor to display the contents of various tables based on
+options:
+sql
+Copy code
+DECLARE
+CURSOR c_options IS
+SELECT '1. Members who have taken a book on a specific date' AS
+option_desc,
+1 AS option_id FROM dual
+UNION ALL
+SELECT '2. Members who have taken books worth more than Rs. 400', 2
+FROM dual;
+v_option_id NUMBER;
+BEGIN
+FOR rec IN c_options LOOP
+DBMS_OUTPUT.PUT_LINE(rec.option_id || ': ' || rec.option_desc);
+END LOOP;
+-- Prompt for user input (simulated here)
+v_option_id := 1; -- You can replace this with an actual user input
+IF v_option_id = 1 THEN
+FOR member_rec IN (
+SELECT m.member_name
+FROM member m
+JOIN issue i ON m.member_code = i.member_code
+WHERE i.issue_date = TO_DATE('2007-10-08', 'YYYY-MM-DD')
+) LOOP
+DBMS_OUTPUT.PUT_LINE('Member Name: ' ||
+member_rec.member_name);
+END LOOP;
+ELSIF v_option_id = 2 THEN
+FOR member_code_rec IN (
+SELECT DISTINCT i.member_code
+FROM issue i
+JOIN book b ON i.book_code = b.book_code
+WHERE b.cost > 400
+) LOOP
+DBMS_OUTPUT.PUT_LINE('Member Code: ' ||
+member_code_rec.member_code);
+END LOOP;
+
+ELSE
+END;
+
+DBMS_OUTPUT.PUT_LINE('Invalid Option Selected.');
+END IF;
+
+This PL/SQL block defines a cursor to display options and fetches results based on user
+selection.
+4. Write a PL/SQL Trigger for Delete Operation
+(D) Write a PL/SQL trigger to perform a delete operation against a table:
+sql
+Copy code
+DELIMITER //
+CREATE TRIGGER BeforeDeleteIssue
+BEFORE DELETE ON issue
+FOR EACH ROW
+BEGIN
+DECLARE v_BookName VARCHAR(100);
+-- Get the book name from the book table before deleting
+SELECT b.book_name INTO v_BookName
+FROM book b
+WHERE b.book_code = OLD.book_code;
+DBMS_OUTPUT.PUT_LINE('About to delete issue of book: ' || v_BookName);
+END //
+DELIMITER ;
+
+Explanation:
+
+
+
+
+Trigger Name: BeforeDeleteIssue
+Trigger Type: BEFORE DELETE — It fires before a record is deleted from the issue
+table.
+Trigger Action: Retrieves the name of the book being deleted and outputs a message.
+
+Task 10: Create Tables and Implement Functionality
+1. Create Tables with Constraints
+SQL statements to create Marks table:
+sql
+Copy code
+-- Create Marks table
+CREATE TABLE Marks (
+Regno INT PRIMARY KEY,
+Name VARCHAR(100) NOT NULL,
+Dept VARCHAR(50),
+Subj1 INT,
+
+Subj2 INT,
+Subj3 INT
+);
+
+
+Marks table:
+o Regno: Primary Key.
+o Name: Name of the student.
+o Dept: Department of the student.
+o Subj1, Subj2, Subj3: Marks in three subjects.
+
+2. Add a Column Total in the Marks Table
+(a) Add a column Total in the Marks table and update the Total field with the sum of
+three subject marks:
+sql
+Copy code
+ALTER TABLE Marks
+ADD Total INT;
+UPDATE Marks
+SET Total = Subj1 + Subj2 + Subj3;
+
+This statement adds a Total column and populates it with the sum of the marks from the
+three subjects.
+3. Find the Second Maximum Total in the Table
+(b) Find the second maximum total in the table:
+sql
+Copy code
+SELECT MAX(Total) AS SecondMaximumTotal
+FROM Marks
+WHERE Total < (SELECT MAX(Total) FROM Marks);
+
+This query finds the maximum total that is less than the highest total.
+4. Display the Name of the Student with Maximum Total
+(c) Display the name of the student with maximum total:
+sql
+Copy code
+SELECT Name
+FROM Marks
+WHERE Total = (SELECT MAX(Total) FROM Marks);
+
+This query retrieves the name of the student whose total marks are the highest.
+5. Write a PL/SQL Trigger for Update Operation
+(d) Write a PL/SQL trigger to perform an update operation against a table:
+
+sql
+Copy code
+DELIMITER //
+CREATE TRIGGER BeforeUpdateMarks
+BEFORE UPDATE ON Marks
+FOR EACH ROW
+BEGIN
+IF NEW.Subj1 IS NOT NULL AND NEW.Subj2 IS NOT NULL AND NEW.Subj3 IS NOT
+NULL THEN
+SET NEW.Total = NEW.Subj1 + NEW.Subj2 + NEW.Subj3;
+END IF;
+END //
+DELIMITER ;
+
+Explanation:
+
+
+
+
+Trigger Name: BeforeUpdateMarks
+Trigger Type: BEFORE UPDATE — It fires before an update is made to the Marks
+table.
+Trigger Action: Automatically recalculates the Total whenever the marks for
+subjects are updated.
+
+Summary
+
+
+
+Task 9 involves creating member, book, and issue tables, with queries for various
+operations and a PL/SQL block and trigger for managing data.
+Task 10 focuses on creating a Marks table, modifying it to include a total, finding
+totals, and writing a trigger to update totals dynamically.
+
+4o mini
+You said:
+
+11.Write the Query statement for the following: a. Create a Student table (Regno, name, dept)
+and populate with data. b. Create a view for CSE dept with the details of students of CSE
+dept. c. Write a PL/SQL program to find the details of the student when regno is given as
+input. Handle Exceptions. 12.Create the following tables with the mapping given below.
+stu_details (reg_no, stu_name, DOB, address, city) mark_details (reg_no, mark1, mark2,
+mark3, total) (a) Alter the table mark_details to add a column average with data type as long.
+(b) Display the months between the DOB and till date. (c) Using alter command drop the
+column address from the table stu_details. (d) Write a PL/SQL program to find the sum &
+average marks of all the student using procedures.
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for tasks 11 and 12:
+
+Task 11: Create Student Table and View
+1. Create a Student Table and Populate It with Data
+(a) SQL statement to create the Student table:
+sql
+Copy code
+-- Create Student table
+CREATE TABLE Student (
+Regno INT PRIMARY KEY,
+Name VARCHAR(100) NOT NULL,
+Dept VARCHAR(50)
+);
+-- Insert sample data into the Student table
+INSERT INTO Student (Regno, Name, Dept) VALUES (101, 'Alice', 'CSE');
+INSERT INTO Student (Regno, Name, Dept) VALUES (102, 'Bob', 'ECE');
+INSERT INTO Student (Regno, Name, Dept) VALUES (103, 'Charlie', 'CSE');
+INSERT INTO Student (Regno, Name, Dept) VALUES (104, 'David', 'ME');
+INSERT INTO Student (Regno, Name, Dept) VALUES (105, 'Eve', 'CSE');
+
+2. Create a View for CSE Department
+(b) SQL statement to create a view for CSE department:
+sql
+Copy code
+-- Create a view for CSE department students
+CREATE VIEW CSE_Students AS
+SELECT *
+FROM Student
+WHERE Dept = 'CSE';
+
+This view will display all the students enrolled in the CSE department.
+3. PL/SQL Program to Find Student Details by Regno
+(c) PL/SQL program to find the details of the student when Regno is given as input:
+sql
+Copy code
+DECLARE
+v_Regno INT := &input_regno; -- Prompt for input
+v_Name VARCHAR(100);
+v_Dept VARCHAR(50);
+BEGIN
+SELECT Name, Dept INTO v_Name, v_Dept
+FROM Student
+WHERE Regno = v_Regno;
+DBMS_OUTPUT.PUT_LINE('Student Details:');
+DBMS_OUTPUT.PUT_LINE('Regno: ' || v_Regno);
+DBMS_OUTPUT.PUT_LINE('Name: ' || v_Name);
+DBMS_OUTPUT.PUT_LINE('Dept: ' || v_Dept);
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+
+END;
+
+DBMS_OUTPUT.PUT_LINE('No student found with Regno: ' || v_Regno);
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+
+This block retrieves the details of a student based on the provided registration number and
+handles exceptions accordingly.
+
+Task 12: Create Student and Mark Details Tables
+1. Create Tables with the Given Mapping
+sql
+Copy code
+-- Create stu_details table
+CREATE TABLE stu_details (
+reg_no INT PRIMARY KEY,
+stu_name VARCHAR(100) NOT NULL,
+DOB DATE,
+address VARCHAR(255),
+city VARCHAR(100)
+);
+-- Create mark_details table
+CREATE TABLE mark_details (
+reg_no INT PRIMARY KEY,
+mark1 INT,
+mark2 INT,
+mark3 INT,
+total INT,
+FOREIGN KEY (reg_no) REFERENCES stu_details(reg_no) ON DELETE CASCADE
+);
+
+2. Alter the Table to Add an Average Column
+(a) Alter the mark_details table to add a column average:
+sql
+Copy code
+ALTER TABLE mark_details
+ADD average FLOAT;
+
+This statement adds an average column to the mark_details table.
+3. Display the Months Between DOB and Current Date
+(b) SQL statement to display the months between the DOB and the current date:
+sql
+Copy code
+SELECT reg_no, stu_name,
+MONTHS_BETWEEN(TRUNC(SYSDATE), DOB) AS months_between
+FROM stu_details;
+
+This query calculates the number of months between the student's date of birth (DOB) and
+the current date.
+4. Drop the Address Column from stu_details
+(c) Alter the stu_details table to drop the address column:
+sql
+Copy code
+ALTER TABLE stu_details
+DROP COLUMN address;
+
+This command removes the address column from the stu_details table.
+5. PL/SQL Program to Find Sum and Average Marks
+(d) PL/SQL program to find the sum and average marks of all students using
+procedures:
+sql
+Copy code
+CREATE OR REPLACE PROCEDURE CalculateMarksSummary AS
+v_TotalSum INT := 0;
+v_TotalCount INT := 0;
+v_Average FLOAT;
+BEGIN
+-- Calculate sum and count of total marks
+SELECT SUM(total), COUNT(*)
+INTO v_TotalSum, v_TotalCount
+FROM mark_details;
+IF v_TotalCount > 0 THEN
+v_Average := v_TotalSum / v_TotalCount;
+DBMS_OUTPUT.PUT_LINE('Total Sum of Marks: ' || v_TotalSum);
+DBMS_OUTPUT.PUT_LINE('Average Marks: ' || v_Average);
+ELSE
+DBMS_OUTPUT.PUT_LINE('No marks found for any student.');
+END IF;
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+Summary
+
+
+
+Task 11 involves creating a Student table, a view for CSE students, and a PL/SQL
+program to retrieve student details.
+Task 12 involves creating stu_details and mark_details tables, altering the
+structure, displaying date calculations, dropping columns, and writing a PL/SQL
+procedure to calculate the sum and average of marks.
+
+4o mini
+You said:
+
+13.Create the following tables with the mapping given below. Employee (Empno, Ename,
+Job, MgrId, DoB, DoJ, Sal, Comm, Deptno) Department (Dname, Deptno, Dloc) (a) Display
+the Emp no, name, salary and experience of each employee ordered by salary (highest to
+lowest) (b) List the names of the employee working for “Marketing” Department. (c) List the
+names of the employees born in the current month. (d) Write a PL/SQL function to display
+the details of the employee when Employee no given as input. Handle Exceptions.
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 13:
+
+Task 13: Create Employee and Department Tables
+1. Create Tables with the Given Mapping
+sql
+Copy code
+-- Create Employee table
+CREATE TABLE Employee (
+Empno INT PRIMARY KEY,
+Ename VARCHAR(100) NOT NULL,
+Job VARCHAR(50),
+MgrId INT,
+DoB DATE,
+DoJ DATE,
+Sal DECIMAL(10, 2),
+Comm DECIMAL(10, 2),
+Deptno INT
+);
+-- Create Department table
+CREATE TABLE Department (
+Dname VARCHAR(100) NOT NULL,
+Deptno INT PRIMARY KEY,
+Dloc VARCHAR(100)
+);
+
+2. Queries for Each Subpart
+(a) Display Emp no, name, salary, and experience of each employee ordered by salary
+(highest to lowest)
+To calculate experience, we can assume that "experience" is the difference between the
+current date and the DoJ (Date of Joining). The SQL query for this requirement is as follows:
+sql
+Copy code
+SELECT Empno, Ename, Sal,
+TRUNC(MONTHS_BETWEEN(SYSDATE, DoJ)) AS Experience
+FROM Employee
+ORDER BY Sal DESC;
+
+This query retrieves the employee number, name, salary, and experience (in months) for each
+employee, ordered by salary in descending order.
+(b) List the names of the employees working for the “Marketing” Department
+Assuming there is a relationship between the Employee and Department tables based on
+Deptno, the query would look like this:
+sql
+Copy code
+SELECT E.Ename
+FROM Employee E
+JOIN Department D ON E.Deptno = D.Deptno
+WHERE D.Dname = 'Marketing';
+
+This query retrieves the names of employees who work in the Marketing department by
+joining the Employee and Department tables.
+(c) List the names of the employees born in the current month
+To find employees born in the current month, we can use the EXTRACT function to get the
+month and year:
+sql
+Copy code
+SELECT E.Ename
+FROM Employee E
+WHERE EXTRACT(MONTH FROM E.DoB) = EXTRACT(MONTH FROM SYSDATE)
+AND EXTRACT(YEAR FROM E.DoB) = EXTRACT(YEAR FROM SYSDATE);
+
+This query retrieves the names of employees whose birth month matches the current month.
+
+3. PL/SQL Function to Display Employee Details
+(d) PL/SQL function to display the details of the employee when the Employee no is
+given as input. Handle exceptions.
+sql
+Copy code
+CREATE OR REPLACE FUNCTION GetEmployeeDetails(p_Empno INT)
+RETURN VARCHAR2
+IS
+v_Ename VARCHAR(100);
+v_Job VARCHAR(50);
+v_Sal DECIMAL(10, 2);
+v_Comm DECIMAL(10, 2);
+v_Deptno INT;
+v_Result VARCHAR2(400);
+BEGIN
+SELECT Ename, Job, Sal, Comm, Deptno
+INTO v_Ename, v_Job, v_Sal, v_Comm, v_Deptno
+FROM Employee
+WHERE Empno = p_Empno;
+v_Result := 'Employee No: ' || p_Empno ||
+
+', Name: ' || v_Ename ||
+', Job: ' || v_Job ||
+', Salary: ' || v_Sal ||
+', Commission: ' || v_Comm ||
+', Department No: ' || v_Deptno;
+RETURN v_Result;
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+RETURN 'No employee found with Employee No: ' || p_Empno;
+WHEN OTHERS THEN
+RETURN 'An error occurred: ' || SQLERRM;
+END GetEmployeeDetails;
+
+Explanation
+
+
+
+
+
+Function Name: GetEmployeeDetails
+Input Parameter: p_Empno - Employee number to look up.
+Output: Returns a string with employee details or an error message if not found.
+Exception Handling: The function handles exceptions for when no data is found and
+general errors.
+
+Summary
+
+
+Task 13 includes creating Employee and Department tables with relevant columns,
+writing SQL queries for various employee details, and implementing a PL/SQL
+function to retrieve employee information by employee number.
+
+4o mini
+You said:
+
+14. (i)Create a table ‘Student’ with the following details (table level constraints) Rollno
+number(5) Primary key Name varchar2(10) Coursecode number(2) Foreign key (Reference
+‘Course’ table) Mark1 number(3) Check whether values range from 0 to 100 Mark2
+number(3) Check whether values range from 0 to 100 (ii).Create a table ‘Course’ with the
+following details (table level constraints) Ccode number(2) Primary key Course varchar2(10)
+A. Add the field total to table student B. Insert 5 records into the table. Don’t input values for
+total field C. List the student names and their course names D. Write a PL/SQL block to find
+whether the given number is odd or even
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 14, which involves creating Student
+and Course tables, manipulating them, and implementing a PL/SQL block.
+
+Task 14: Create Student and Course Tables
+1. Create the Course Table
+
+sql
+Copy code
+-- Create Course table with necessary constraints
+CREATE TABLE Course (
+Ccode NUMBER(2) PRIMARY KEY,
+Course VARCHAR2(10)
+);
+
+2. Create the Student Table
+sql
+Copy code
+-- Create Student table with necessary constraints
+CREATE TABLE Student (
+Rollno NUMBER(5) PRIMARY KEY,
+Name VARCHAR2(10),
+Coursecode NUMBER(2),
+Mark1 NUMBER(3) CHECK (Mark1 BETWEEN 0 AND 100),
+Mark2 NUMBER(3) CHECK (Mark2 BETWEEN 0 AND 100),
+FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+
+A. Add the Field Total to the Student Table
+sql
+Copy code
+-- Add a Total column to the Student table
+ALTER TABLE Student
+ADD Total NUMBER(5);
+
+B. Insert 5 Records into the Student Table (Total field will be NULL)
+sql
+Copy code
+-- Insert 5 records into the Student table
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (1,
+'Alice', 101, 85, 90);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (2,
+'Bob', 102, 78, 88);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (3,
+'Charlie', 101, 92, 76);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (4,
+'David', 103, 55, 62);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (5,
+'Eve', 102, 70, 80);
+
+C. List the Student Names and Their Course Names
+To list the student names along with their course names, you will need to join the Student
+and Course tables:
+sql
+Copy code
+SELECT S.Name AS StudentName, C.Course AS CourseName
+FROM Student S
+JOIN Course C ON S.Coursecode = C.Ccode;
+
+D. PL/SQL Block to Find Whether a Given Number is Odd or Even
+sql
+Copy code
+DECLARE
+v_Number NUMBER := &input_number; -- Prompt for input
+BEGIN
+IF MOD(v_Number, 2) = 0 THEN
+DBMS_OUTPUT.PUT_LINE(v_Number || ' is an Even number.');
+ELSE
+DBMS_OUTPUT.PUT_LINE(v_Number || ' is an Odd number.');
+END IF;
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+Summary
+
+
+
+
+
+
+
+Course Table: Created with a primary key.
+Student Table: Created with primary and foreign key constraints, as well as check
+constraints for marks.
+Field Addition: Added a Total column to the Student table.
+Record Insertion: Inserted five records without specifying the Total.
+Query: Retrieved student names and course names using a join.
+PL/SQL Block: Implemented a block to check if a number is odd or even with
+exception handling.
+
+4o mini
+You said:
+
+15. Create a table ‘Employee’ with the following details(Column level constraints) Empno
+Number(5) Primary key Empname Varchar2(20) Designation Varchar2(10) Date_of_join
+Date Salary Number(9,2) NOT NULL Depno Number(2) Foreign key(Reference
+‘Department’ table) Create another table called ‘Department’ with the following
+structure(Column level constraints) Depno Number(2) Primary key Depname Varchar2(15)
+Deplocation Varchar2(10) A. Display the number of employees in each department with the
+department numbers in descending order B. List the departments where there are employees
+functioning C. List the employees whose depno is not equal to ‘01’ D. Create a view for
+deptnumber in employee table.
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and queries for task 15, which involves creating the Employee
+and Department tables with specified constraints, and performing various queries on those
+tables.
+
+Task 15: Create Employee and Department Tables
+
+1. Create the Department Table
+sql
+Copy code
+-- Create Department table with necessary constraints
+CREATE TABLE Department (
+Depno NUMBER(2) PRIMARY KEY,
+Depname VARCHAR2(15),
+Deplocation VARCHAR2(10)
+);
+
+2. Create the Employee Table
+sql
+Copy code
+-- Create Employee table with necessary constraints
+CREATE TABLE Employee (
+Empno NUMBER(5) PRIMARY KEY,
+Empname VARCHAR2(20),
+Designation VARCHAR2(10),
+Date_of_join DATE,
+Salary NUMBER(9,2) NOT NULL,
+Depno NUMBER(2),
+FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+
+A. Display the Number of Employees in Each Department with Department
+Numbers in Descending Order
+sql
+Copy code
+SELECT Depno, COUNT(*) AS NumberOfEmployees
+FROM Employee
+GROUP BY Depno
+ORDER BY Depno DESC;
+
+B. List the Departments Where There Are Employees Functioning
+sql
+Copy code
+SELECT DISTINCT D.Depname
+FROM Department D
+JOIN Employee E ON D.Depno = E.Depno;
+
+C. List the Employees Whose Depno is Not Equal to '01'
+sql
+Copy code
+SELECT *
+FROM Employee
+WHERE Depno <> 1; -- '01' is interpreted as 1 in NUMBER data type
+
+D. Create a View for Depno in the Employee Table
+sql
+Copy code
+
+-- Create a view to display the department numbers from the Employee table
+CREATE VIEW Employee_Department_View AS
+SELECT Empno, Empname, Depno
+FROM Employee;
+
+Summary
+
+
+
+
+
+
+Department Table: Created with Depno as the primary key.
+Employee Table: Created with various columns including a foreign key referencing
+Department.
+Queries:
+o Displayed the number of employees in each department sorted by department
+number.
+o Listed departments that have employees.
+o Retrieved employees whose department number is not equal to '01'.
+View Creation: Created a view for the department numbers in the employee table.
+
+4o mini
+You said:
+
+16. Create a table order_master with the following fields Orderno varchar2(5) Ordate date
+Vencode varchar2(5) Ordstatus char(1) (p-pending,d-delivered) Del_date Date Create a table
+order_detail with the following fields Orderno varchar2(5) Itemcode varchar2(5) Qty_ord
+number(5) Qty_deld number(5) A. Display the information on orders being handled by a
+vendor whose Vencode is ‘V004’ according to the delivery date order B. List the orders
+which have been placed after ’01-Jan-2006’ and before ’01-Jul-2006’ C. List out the pending
+orders D. Write a PL/SQL block to find summation of odd numbers using while loop
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 16, which involves creating
+order_master and order_detail tables, executing various queries, and writing a PL/SQL
+block.
+
+Task 16: Create order_master and order_detail Tables
+1. Create the order_master Table
+sql
+Copy code
+-- Create order_master table with specified fields
+CREATE TABLE order_master (
+Orderno VARCHAR2(5) PRIMARY KEY,
+Ordate DATE,
+Vencode VARCHAR2(5),
+Ordstatus CHAR(1) CHECK (Ordstatus IN ('p', 'd')), -- 'p' for pending,
+'d' for delivered
+Del_date DATE
+);
+
+2. Create the order_detail Table
+sql
+Copy code
+-- Create order_detail table with specified fields
+CREATE TABLE order_detail (
+Orderno VARCHAR2(5),
+Itemcode VARCHAR2(5),
+Qty_ord NUMBER(5),
+Qty_deld NUMBER(5),
+PRIMARY KEY (Orderno, Itemcode),
+FOREIGN KEY (Orderno) REFERENCES order_master(Orderno) -- Reference to
+order_master
+);
+
+A. Display the Information on Orders Being Handled by a Vendor Whose
+Vencode is ‘V004’ According to the Delivery Date Order
+sql
+Copy code
+SELECT OM.Orderno, OM.Ordate, OM.Vencode, OM.Ordstatus, OM.Del_date
+FROM order_master OM
+WHERE OM.Vencode = 'V004'
+ORDER BY OM.Del_date;
+
+B. List the Orders Which Have Been Placed After ’01-Jan-2006’ and Before
+’01-Jul-2006’
+sql
+Copy code
+SELECT *
+FROM order_master
+WHERE Ordate > TO_DATE('01-Jan-2006', 'DD-Mon-YYYY')
+AND Ordate < TO_DATE('01-Jul-2006', 'DD-Mon-YYYY');
+
+C. List Out the Pending Orders
+sql
+Copy code
+SELECT *
+FROM order_master
+WHERE Ordstatus = 'p'; -- 'p' for pending orders
+
+D. PL/SQL Block to Find the Summation of Odd Numbers Using a While
+Loop
+sql
+Copy code
+DECLARE
+v_Sum NUMBER := 0; -- Variable to store the sum
+v_Number NUMBER := 1; -- Start with the first odd number
+v_Limit NUMBER := 100; -- Limit for odd numbers
+BEGIN
+WHILE v_Number <= v_Limit LOOP
+v_Sum := v_Sum + v_Number; -- Add the odd number to the sum
+v_Number := v_Number + 2; -- Move to the next odd number
+
+END LOOP;
+DBMS_OUTPUT.PUT_LINE('Sum of odd numbers from 1 to ' || v_Limit || '
+is: ' || v_Sum);
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+Summary
+
+
+Tables Created:
+o
+
+order_master table with columns for order information, including constraints
+
+on order status.
+o
+
+
+
+
+order_detail table with columns for order details and foreign key reference
+to order_master.
+
+Queries Executed:
+o Information on orders for a specific vendor ordered by delivery date.
+o Orders placed within a specific date range.
+o List of pending orders.
+PL/SQL Block: Implemented to calculate the sum of odd numbers using a while
+loop, along with exception handling.
+
+4o mini
+You said:
+
+17. Create a table ‘Student’ with the following details (table level constraints) Rollno
+number(5) Primary key Name varchar2(10) Coursecode number(2) Foreign key (Reference
+‘Course’ table) Mark1 number(3) Check whether values range from 0 to 100 Mark2
+number(3) Check whether values range from 0 to 100 Create a table ‘Course’ with the
+following details (table level constraints) Ccode number(2) Primary key Course varchar2(10)
+A. Add the field total to table student B. Insert 5 records into the table. Don’t input values for
+total field. C. List the student name with the highest mark1 D. Create a Trigger to check the
+age valid or not Using Message Alert
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 17, which involves creating Student
+and Course tables, inserting records, querying data, and creating a trigger.
+
+Task 17: Create Student and Course Tables
+1. Create the Course Table
+sql
+Copy code
+-- Create Course table with necessary constraints
+CREATE TABLE Course (
+Ccode NUMBER(2) PRIMARY KEY,
+Course VARCHAR2(10)
+
+);
+
+2. Create the Student Table
+sql
+Copy code
+-- Create Student table with necessary constraints
+CREATE TABLE Student (
+Rollno NUMBER(5) PRIMARY KEY,
+Name VARCHAR2(10),
+Coursecode NUMBER(2),
+Mark1 NUMBER(3) CHECK (Mark1 BETWEEN 0 AND 100),
+Mark2 NUMBER(3) CHECK (Mark2 BETWEEN 0 AND 100),
+FOREIGN KEY (Coursecode) REFERENCES Course(Ccode)
+);
+
+A. Add the Field Total to the Student Table
+sql
+Copy code
+-- Add a Total column to the Student table
+ALTER TABLE Student
+ADD Total NUMBER(5);
+
+B. Insert 5 Records into the Student Table (Total field will be NULL)
+sql
+Copy code
+-- Insert 5 records into the Student table
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (1,
+'Alice', 101, 85, 90);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (2,
+'Bob', 102, 78, 88);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (3,
+'Charlie', 101, 92, 76);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (4,
+'David', 103, 55, 62);
+INSERT INTO Student (Rollno, Name, Coursecode, Mark1, Mark2) VALUES (5,
+'Eve', 102, 70, 80);
+
+C. List the Student Name with the Highest Mark1
+sql
+Copy code
+SELECT Name
+FROM Student
+WHERE Mark1 = (SELECT MAX(Mark1) FROM Student);
+
+D. Create a Trigger to Check If Age is Valid
+Assuming the Student table has an Age field added to it (this field needs to be added
+beforehand), here’s how you would create a trigger to check the validity of the age when a
+new student is inserted.
+Step 1: Modify the Student Table to Add the Age Column
+
+sql
+Copy code
+-- Add Age column to the Student table
+ALTER TABLE Student
+ADD Age NUMBER(3); -- Assuming age is stored as a number
+
+Step 2: Create the Trigger
+sql
+Copy code
+-- Create Trigger to check if Age is valid
+CREATE OR REPLACE TRIGGER check_age
+BEFORE INSERT ON Student
+FOR EACH ROW
+BEGIN
+IF :NEW.Age < 0 OR :NEW.Age > 100 THEN
+RAISE_APPLICATION_ERROR(-20001, 'Invalid age: Age must be between 0
+and 100.');
+END IF;
+END;
+
+Summary
+
+
+
+
+
+
+
+Tables Created:
+o Course table with Ccode as the primary key.
+o Student table with foreign key reference to Course and checks on marks.
+Field Addition: Added a Total column to the Student table.
+Record Insertion: Inserted five records without specifying the Total.
+Queries Executed:
+o Retrieved the name of the student with the highest Mark1.
+Trigger Creation: Created a trigger to validate age when inserting new records into
+the Student table. If the age is not valid, an error message is raised.
+
+4o mini
+You said:
+
+18. 1.Create a table member with the following fields member code, member name, phoneno.
+2.Create a table book with the following fields bookcode, category code, bookname, cost.
+3.Create a table issue with the following fields membercode, Book code, Issuedate,
+Returndate. A. List all the members names who have taken the book on 8-10-2007. B. List
+the member codes of the members who have taken books worth more than Rs. 400.00. C.
+Write a PL/SQL block to generate the Fibonacci series D. Write a PL/SQL block to find
+biggest among two numbers
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 18, which involves creating member,
+book, and issue tables, executing queries, and writing PL/SQL blocks.
+
+Task 18: Create member, book, and issue Tables
+
+1. Create the member Table
+sql
+Copy code
+-- Create member table with specified fields
+CREATE TABLE member (
+membercode VARCHAR2(5) PRIMARY KEY,
+membername VARCHAR2(50),
+phoneno VARCHAR2(15)
+);
+
+2. Create the book Table
+sql
+Copy code
+-- Create book table with specified fields
+CREATE TABLE book (
+bookcode VARCHAR2(5) PRIMARY KEY,
+categorycode VARCHAR2(5),
+bookname VARCHAR2(100),
+cost NUMBER(10, 2)
+);
+
+3. Create the issue Table
+sql
+Copy code
+-- Create issue table with specified fields
+CREATE TABLE issue (
+membercode VARCHAR2(5),
+bookcode VARCHAR2(5),
+issuedate DATE,
+returndate DATE,
+PRIMARY KEY (membercode, bookcode),
+FOREIGN KEY (membercode) REFERENCES member(membercode),
+FOREIGN KEY (bookcode) REFERENCES book(bookcode)
+);
+
+A. List All the Members' Names Who Have Taken the Book on 8-10-2007
+sql
+Copy code
+SELECT DISTINCT m.membername
+FROM member m
+JOIN issue i ON m.membercode = i.membercode
+WHERE i.issuedate = TO_DATE('08-10-2007', 'DD-MM-YYYY');
+
+B. List the Member Codes of the Members Who Have Taken Books Worth
+More Than Rs. 400.00
+sql
+Copy code
+SELECT DISTINCT i.membercode
+FROM issue i
+JOIN book b ON i.bookcode = b.bookcode
+WHERE b.cost > 400.00;
+
+C. Write a PL/SQL Block to Generate the Fibonacci Series
+sql
+Copy code
+DECLARE
+v_Fib1 NUMBER := 0; -- First Fibonacci number
+v_Fib2 NUMBER := 1; -- Second Fibonacci number
+v_Next NUMBER;
+-- Next Fibonacci number
+v_TermCount NUMBER := 10; -- Number of terms to generate
+BEGIN
+DBMS_OUTPUT.PUT_LINE('Fibonacci Series:');
+DBMS_OUTPUT.PUT(v_Fib1 || ' ' || v_Fib2 || ' '); -- Print first two
+numbers
+FOR i IN 1..(v_TermCount - 2) LOOP
+v_Next := v_Fib1 + v_Fib2; -- Calculate next Fibonacci number
+DBMS_OUTPUT.PUT(v_Next || ' '); -- Print next number
+v_Fib1 := v_Fib2; -- Update first number
+v_Fib2 := v_Next; -- Update second number
+END LOOP;
+DBMS_OUTPUT.PUT_LINE(''); -- New line after series
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+D. Write a PL/SQL Block to Find the Biggest Among Two Numbers
+sql
+Copy code
+DECLARE
+v_Num1 NUMBER := 10; -- First number
+v_Num2 NUMBER := 20; -- Second number
+v_Biggest NUMBER; -- Variable to hold the biggest number
+BEGIN
+IF v_Num1 > v_Num2 THEN
+v_Biggest := v_Num1;
+ELSE
+v_Biggest := v_Num2;
+END IF;
+DBMS_OUTPUT.PUT_LINE('The biggest number is: ' || v_Biggest);
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+Summary
+
+
+
+
+Tables Created:
+o member table with member information.
+o book table with book details.
+o issue table to track issued books to members, including foreign key
+references.
+Queries Executed:
+o Retrieved names of members who took books on a specific date.
+
+Retrieved member codes of members who have taken books costing more than
+Rs. 400.
+PL/SQL Blocks:
+o Generated a Fibonacci series.
+o Found the biggest among two predefined numbers, with exception handling.
+o
+
+
+
+4o mini
+You said:
+
+19. Create a table ‘Employee’ with the following details(Column level constraints) Empno
+Number(5) Primary key Empname Varchar2(20) Designation Varchar2(10) Date_of_join
+Date Salary Number(9,2) NOT NULL Depno Number(2) Foreign key(Reference
+‘Department’ table) 2. Create another table called ‘Department’ with the following
+structure(Column level constraints) Depno Number(2) Primary key Depname Varchar2(15)
+Deplocation Varchar2(10) A. Display the number of employees in each department with the
+department numbers in descending order B. Display designation, department no and total
+number of employees designation wise and department wise. C. List the Employee names
+and their department names.(Use Outer join) D. Write a function to calculate the factorial of a
+given number
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 19, which involves creating
+Employee and Department tables, executing queries, and writing a PL/SQL function to
+calculate the factorial of a given number.
+
+Task 19: Create Employee and Department Tables
+1. Create the Department Table
+sql
+Copy code
+-- Create Department table with specified fields and constraints
+CREATE TABLE Department (
+Depno NUMBER(2) PRIMARY KEY,
+Depname VARCHAR2(15),
+Deplocation VARCHAR2(10)
+);
+
+2. Create the Employee Table
+sql
+Copy code
+-- Create Employee table with specified fields and constraints
+CREATE TABLE Employee (
+Empno NUMBER(5) PRIMARY KEY,
+Empname VARCHAR2(20),
+Designation VARCHAR2(10),
+Date_of_join DATE,
+Salary NUMBER(9,2) NOT NULL,
+
+Depno NUMBER(2),
+FOREIGN KEY (Depno) REFERENCES Department(Depno)
+);
+
+A. Display the Number of Employees in Each Department with the
+Department Numbers in Descending Order
+sql
+Copy code
+SELECT e.Depno, COUNT(e.Empno) AS Employee_Count
+FROM Employee e
+GROUP BY e.Depno
+ORDER BY e.Depno DESC;
+
+B. Display Designation, Department No, and Total Number of Employees
+Designation-wise and Department-wise
+sql
+Copy code
+SELECT e.Designation, e.Depno, COUNT(e.Empno) AS Total_Employees
+FROM Employee e
+GROUP BY e.Designation, e.Depno
+ORDER BY e.Designation, e.Depno;
+
+C. List the Employee Names and Their Department Names (Use Outer Join)
+sql
+Copy code
+SELECT e.Empname, d.Depname
+FROM Employee e
+LEFT JOIN Department d ON e.Depno = d.Depno;
+
+D. Write a Function to Calculate the Factorial of a Given Number
+sql
+Copy code
+CREATE OR REPLACE FUNCTION Calculate_Factorial(n IN NUMBER) RETURN NUMBER
+IS
+v_Factorial NUMBER := 1;
+BEGIN
+IF n < 0 THEN
+RAISE_APPLICATION_ERROR(-20001, 'Negative number: Factorial is not
+defined for negative numbers.');
+ELSIF n = 0 THEN
+RETURN 1; -- Factorial of 0 is 1
+ELSE
+FOR i IN 1..n LOOP
+v_Factorial := v_Factorial * i;
+END LOOP;
+END IF;
+RETURN v_Factorial;
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+RETURN NULL;
+END Calculate_Factorial;
+
+Summary
+
+
+Tables Created:
+o
+o
+
+
+
+
+
+Department table with department details.
+Employee table with employee information and a foreign key reference to the
+Department table.
+
+Queries Executed:
+o Counted the number of employees in each department ordered by department
+number in descending order.
+o Displayed designation, department number, and total number of employees
+grouped by designation and department.
+o Listed employee names with their department names using an outer join.
+Function Created:
+o A function to calculate the factorial of a given number with error handling for
+negative inputs.
+
+4o mini
+You said:
+
+20. Create a table order_master with the following fields Orderno varchar2(5) Ordate date
+Vencode varchar2(5) Ordstatus char(1) (p-pending,d-delivered) Del_date Date 2.Create a
+table order_detail with the following fields Orderno varchar2(5) Itemcode varchar2(5)
+Qty_ord number(5) Qty_deld number(5) A. Display the information on orders being handled
+by a vendor whose Vencode is ‘V004’ according to the delivery date order B. List the orders
+which have been placed after ’01-Jan-2018’ and before ’01-Jul-2018’. C. List out the pending
+orders D. Write a PL/SQL block to find whether the given number is odd or even
+ChatGPT said:
+
+ChatGPT
+Here are the SQL statements and PL/SQL code for task 20, which involves creating
+order_master and order_detail tables, executing queries, and writing a PL/SQL block to
+determine whether a given number is odd or even.
+
+Task 20: Create order_master and order_detail Tables
+1. Create the order_master Table
+sql
+Copy code
+-- Create order_master table with specified fields and constraints
+CREATE TABLE order_master (
+Orderno VARCHAR2(5) PRIMARY KEY,
+Ordate DATE,
+Vencode VARCHAR2(5),
+Ordstatus CHAR(1) CHECK (Ordstatus IN ('p', 'd')), -- Status can be 'p'
+for pending or 'd' for delivered
+Del_date DATE
+);
+
+2. Create the order_detail Table
+sql
+Copy code
+-- Create order_detail table with specified fields and constraints
+CREATE TABLE order_detail (
+Orderno VARCHAR2(5),
+Itemcode VARCHAR2(5),
+Qty_ord NUMBER(5),
+Qty_deld NUMBER(5),
+PRIMARY KEY (Orderno, Itemcode),
+FOREIGN KEY (Orderno) REFERENCES order_master(Orderno)
+);
+
+A. Display the Information on Orders Being Handled by a Vendor Whose
+Vencode is ‘V004’ According to the Delivery Date Order
+sql
+Copy code
+SELECT *
+FROM order_master
+WHERE Vencode = 'V004'
+ORDER BY Del_date;
+
+B. List the Orders Which Have Been Placed After ‘01-Jan-2018’ and Before
+‘01-Jul-2018’
+sql
+Copy code
+SELECT *
+FROM order_master
+WHERE Ordate > TO_DATE('01-Jan-2018', 'DD-Mon-YYYY') AND Ordate <
+TO_DATE('01-Jul-2018', 'DD-Mon-YYYY');
+
+C. List Out the Pending Orders
+sql
+Copy code
+SELECT *
+FROM order_master
+WHERE Ordstatus = 'p'; -- Assuming 'p' represents pending orders
+
+D. Write a PL/SQL Block to Find Whether the Given Number is Odd or Even
+sql
+Copy code
+DECLARE
+v_Number NUMBER := 7; -- Change this value to test other numbers
+v_Result VARCHAR2(20);
+BEGIN
+IF MOD(v_Number, 2) = 0 THEN
+v_Result := 'Even';
+ELSE
+v_Result := 'Odd';
+END IF;
+
+DBMS_OUTPUT.PUT_LINE('The number ' || v_Number || ' is ' || v_Result ||
+'.');
+EXCEPTION
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+END;
+
+Summary
+
+
+Tables Created:
+o
+
+and order status.
+order_detail table to track order details like items ordered and delivered
+quantities.
+Queries Executed:
+o Retrieved orders for a specific vendor sorted by delivery date.
+o Listed orders placed within a specific date range.
+o Displayed orders with a pending status.
+PL/SQL Block:
+o Implemented a PL/SQL block to check if a given number is odd or even, with
+the option to change the number for testing purposes.
+o
+
+
+
+
+
+order_master table to store information about orders, including vendor code
+
+
